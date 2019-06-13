@@ -2,6 +2,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+//lodash thư viện cung cấp nhiều tính năng cho js
+// npm i lodash --save
+// npm i bcryptjs --save   bcryptjs để tạo ra chuỗi tăng bảo mật
+
 mongoose
   .connect("mongodb://localhost:27017/xedike", { userNewUrlParser: true })
   .then(() => console.log("Connected to DB"))
