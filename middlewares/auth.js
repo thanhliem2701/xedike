@@ -10,7 +10,7 @@ const authenticating = (req, res, next) => {
   const token = req.header("Authorization");
   try {
     const decoded = jwt.verify(token, "LouisPanda");
-    console.log("TCL: authenticating -> decoded", decoded);
+    // console.log("TCL: authenticating -> decoded", decoded);
     req.user = decoded;
     next();
   } catch (error) {
