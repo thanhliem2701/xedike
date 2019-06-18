@@ -2,20 +2,20 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../../models/users");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { authenticating, authorizing } = require("../../middlewares/auth");
 
 // route   POST  /api/users/register
 // desc    register new user
 // access  PUBLIC
-router.post("/register", (req, res) => {
-  // console.log("TCL: res", res.body);
-  // res.send(req.body);
-  const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
+const register = () =>{
+    const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
 
-  //gia dinh input valid
+  // Dang ky user
+  // gia dinh input valid
   //   User.findOne({ email,phone  }).then(user => {    // kiem tra tho dang and
-  User.findOne({ $or: [{ email }, { phone }] })
+  User.findOne({ $or: [{ email }, { phone }] }) // kiem tra theo dang or
     .then(user => {
-      // kiem tra theo dang or
       if (user) return Promise.reject({ errors: "Email exists" });
 
       const newUser = new User({
@@ -41,7 +41,12 @@ router.post("/register", (req, res) => {
       });
     })
     .catch(err => res.status(400).json(err)); // err
-});
+}
+// router.post("/register", (req, res,next) => {
+//   // console.log("TCL: res", res.body);
+//   // res.send(req.body);
+  
+// });
 
 //API, cấu trúc vậy gọi là middleware
 // app.get("/", (req, res) => {
@@ -62,5 +67,48 @@ router.post("/register", (req, res) => {
 //   }
 // );
 
+// route   POST  /api/users/login
+// desc    Login
+// access  PUBLIC
+router.post("/login", (req, res) => {
+  const { email, passWord } = req.body;
+
+  User.findOne({ email })
+    .then(user => {
+      if (!user) return Promise.reject({ errors: "Email does not exists" });
+
+      bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
+        if (!isMatch)
+          return res.status(400).json({ errors: "Password invalid" });
+
+        const payload = {
+          email: user.email,
+          fullName: user.fullName,
+          userType: user.userType // Để phân quyền user, sau này lấy từ jwt về xài
+        };
+        jwt.sign(payload, "LouisPanda", { expiresIn: "1h" }, (err, token) => {
+          if (err) return res.status(400).json(err);
+
+          return res.status(200).json({
+            message: "login success",
+            token
+          });
+        });
+        // res.status(200).json({
+        //   message: "success 1"
+        // });
+      });
+    })
+    .catch(err => res.status(400).json(err)); // err
+});
+
+// route   POST  /api/users/test-private
+// desc    test-private
+// access  PRIVATE (Chỉ cho những user đã loginn vào hệ thống mới xài được)
+router.get("/test-private", authenticating,authorizing(["1","2"]), (req, res) => {
+  res.status(200).json({ message: "Ban da vao he thong" }); // sử dụng res là kết thúc luôn middleware
+});
+
 // module.exports = { router }; // xuat ra object
-module.exports = router;
+// module.exports = router;
+module.exports = { register }; 
