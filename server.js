@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.get()
 // app.post()
 // app.use("/",require("./routes/api/user").router);  khi xuat ra object
-app.use("/api/users", require("./routes/api/user")); // khi xuat ra het
+app.use("/api/users", require("./routes/api")); // khi xuat ra het
 
 //my package
 // nếu biến môi trường process.env.PORT ko có thì lấy là 5000
