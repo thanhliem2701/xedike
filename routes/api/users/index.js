@@ -11,7 +11,7 @@ router.post("/login", userController.login);
 router.get(
   "/test-private",
   authenticating,
-  authorizing(["1", "2"]),
+  authorizing(["driver", "passenger"]),
   userController.testPrivate
 );
 router.post(

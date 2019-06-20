@@ -29,6 +29,9 @@ app.use("/uploads", express.static("upload"));
 // app.use("/",require("./routes/api/user").router);  khi xuat ra object
 app.use("/api/users", require("./routes/api/users")); // khi xuat ra het
 
+//Trip
+app.use("/api/trips", require("./routes/api/trips"));
+
 //my package
 // nếu biến môi trường process.env.PORT ko có thì lấy là 5000
 const port = process.env.PORT || 5000; // đáp ứng được nhiều port khác nhau thì có thể tùy ứng biến.
