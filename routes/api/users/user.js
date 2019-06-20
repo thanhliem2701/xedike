@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 // const { authenticating, authorizing } = require("../../../middlewares/auth");
 // const { register } = require("../../middlewares/register");
+const validateRegisterInput = require("../../../validation/validateRegisterInput");
 
 const uploadAvatar = (req, res, next) => {
   const { id } = req.user;
@@ -22,39 +23,40 @@ const uploadAvatar = (req, res, next) => {
 // route   POST  /api/users/register
 // desc    register new user
 // access  PUBLIC
-const register = (req, res, next) => {
+const register = async (req, res, next) => {
+  const { isValid, errors } = await validateRegisterInput(req.body);
+  if (!isValid) return res.status(400).json(errors);
+
   const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
+  const newUser = new User({
+    email,
+    passWord,
+    fullName,
+    userType,
+    phone,
+    dateOfBirth
+  });
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) return Promise.reject(err);
 
-  // Dang ky user
-  // gia dinh input valid
-  //   User.findOne({ email,phone  }).then(user => {    // kiem tra tho dang and
-  User.findOne({ $or: [{ email }, { phone }] }) // kiem tra theo dang or
-    .then(user => {
-      if (user) return Promise.reject({ errors: "Email exists" });
+    bcrypt.hash(passWord, salt, (err, hash) => {
+      if (err) return Promise.reject(err);
 
-      const newUser = new User({
-        email,
-        passWord,
-        fullName,
-        userType,
-        phone,
-        dateOfBirth
-      });
-      bcrypt.genSalt(10, (err, salt) => {
-        if (err) return Promise.reject(err);
-
-        bcrypt.hash(passWord, salt, (err, hash) => {
-          if (err) return Promise.reject(err);
-
-          newUser.passWord = hash;
-          newUser
-            .save()
-            .then(user => res.status(200).json(user)) // success
-            .catch(err => res.status(400).json(err)); // err
-        });
-      });
-    })
-    .catch(err => res.status(400).json(err)); // err
+      newUser.passWord = hash;
+      newUser
+        .save()
+        .then(user => res.status(200).json(user)) // success
+        .catch(err => res.status(400).json(err)); // err
+    });
+  });
+  // // Dang ky user
+  // // gia dinh input valid
+  // //   User.findOne({ email,phone  }).then(user => {    // kiem tra tho dang and
+  // User.findOne({ $or: [{ email }, { phone }] }) // kiem tra theo dang or
+  //   .then(user => {
+  //     if (user) return Promise.reject({ errors: "Email exists" });
+  //   })
+  //   .catch(err => res.status(400).json(err)); // err
 };
 // router.post("/register", (req, res,next) => {
 //   // console.log("TCL: res", res.body);
@@ -127,4 +129,4 @@ const testPrivate = (req, res, next) => {
 
 // module.exports = { router }; // xuat ra object
 // module.exports = router;
-module.exports = { register, login, testPrivate,uploadAvatar };
+module.exports = { register, login, testPrivate, uploadAvatar };

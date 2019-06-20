@@ -8,12 +8,12 @@ const router = express.Router();
 router.post(
   "/create-trip",
   authenticating,
-  authorizing(["1"]),
+  authorizing(["driver"]),
   tripController.createTrip
 );
 
 //passenger
 router.post("/book-trip/:tripId", authenticating,
-authorizing(["2"]),tripController.bookTrip);
+authorizing(["passenger"]),tripController.bookTrip);
 
 module.exports = router;
