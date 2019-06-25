@@ -92,11 +92,11 @@ const login = (req, res, next) => {
 
   User.findOne({ email })
     .then(user => {
-      if (!user) return Promise.reject({ errors: "Email does not exists" });
+      if (!user) return Promise.reject({ email: "Email does not exists" });
 
       bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
         if (!isMatch)
-          return res.status(400).json({ errors: "Password invalid" });
+          return res.status(400).json({ passWord: "Password invalid" });
 
         const payload = {
           id: user._id,
