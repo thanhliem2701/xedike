@@ -11,7 +11,6 @@ const UserSchema = new mongoose.Schema({
   avatar: { type: String },
   numberOfTrip: { type: Number },
   numberOfKms: { type: Number },
-  avatar: { type: String },
   isActive: { type: Boolean, default: true }
 });
 
