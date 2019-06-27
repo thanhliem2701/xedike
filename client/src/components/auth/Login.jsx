@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
-import _ from "lodash";
-import axios from "axios";
-import jwtDecode from "jwt-decode";
-import Fingerprint2 from "fingerprintjs2";
+// import _ from "lodash";
+// import axios from "axios";
+// import jwtDecode from "jwt-decode";
+// import Fingerprint2 from "fingerprintjs2";
+import { connect } from "react-redux";
+import { login } from "../../action/auth";
+// import { withRouter } from "react-router-dom";
+// withRouter là higher order component
+// Khi nó bọc 1 component lại thì component trả về sẽ có tất cả props
 
 // CSS ko dung boot trap ma dung ben duoi
 // material design -react-md
@@ -28,38 +33,31 @@ class Login extends Component {
   };
   onSubmit = e => {
     e.preventDefault();
-    axios
-      //   .post("http://localhost:5000/api/users/register", this.state)
-      .post("/api/users/login", this.state)
-      .then(res => {
-        // console.log("response: ", res);
-        const token = res.data.token;
-        localStorage.setItem("token", token);
-        const decoded = jwtDecode(token);
-        console.log(decoded);
-        axios.defaults.headers.common["Authorization"] = token;
+    this.props.login(this.state);
+    // const { email, passWord } = this.state;
+    //fingerprint2
+    // Fingerprint2.getV18({}, function(fingerPrint) {   // loi lam mat this.
+    // Fingerprint2.getV18({}, fingerPrint => {
+    //   // console.log(result);
 
-        //fingerprint2
-        Fingerprint2.getV18({}, function(result, components) {
-          console.log(result);
-          axios.defaults.headers.common["fingerprint"] = result;
-        });
+    // });
+  };
 
-        //Authorization
-      })
-      .catch(err => {
-        // console.log(err.response.data);
-        this.setState({
-          errors: _.get(err, "response.data", {}) // dấu {} phía sau nghĩa là trường hợp ko có dữ liệu thì object rỗng, né undefine
-        });
-      });
-  };
-  testPrivate = () => {
-    axios
-      .get("/api/users/test-private")
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
-  };
+  // testPrivate = () => {
+  //   const token = localStorage.getItem("token");
+
+  //   Fingerprint2.getV18({}, fingerPrint => {
+  //     axios.defaults.headers.common["Authorization"] = token;
+  //     axios.defaults.headers.common["fingerprint"] = fingerPrint;
+
+  //     axios
+  //     .get("/api/users/test-private")
+  //     .then(res => console.log(res))
+  //     .catch(err => console.log(err));
+  //   })
+
+  // };
+
   render() {
     return (
       <div className="container text-left">
@@ -100,10 +98,12 @@ class Login extends Component {
             Submit
           </Button>
         </Form>
-        {/* <Button onClick={this.testPrivate}>TEST</Button> */}
-
+        <Button onClick={this.testPrivate}>TEST</Button>
       </div>
     );
   }
 }
-export default Login;
+export default connect(
+  null,
+  { login }
+)(Login);

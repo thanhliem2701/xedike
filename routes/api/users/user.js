@@ -24,9 +24,8 @@ const uploadAvatar = (req, res, next) => {
 // desc    register new user
 // access  PUBLIC
 const register = async (req, res, next) => {
-
   const { isValid, errors } = await validateRegisterInput(req.body);
-  
+
   if (!isValid) return res.status(400).json(errors);
 
   const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
@@ -90,12 +89,13 @@ const register = async (req, res, next) => {
 // access  PUBLIC
 const login = (req, res, next) => {
   // router.post("/login", (req, res) => {
-  const { email, passWord } = req.body;
+  const { email, passWord, fingerPrint } = req.body;
 
   User.findOne({ email })
     .then(user => {
       if (!user) return Promise.reject({ email: "Email does not exists !" });
-      if (passWord ==="") return Promise.reject({ passWord: "Password is required !" });
+      if (passWord === "")
+        return Promise.reject({ passWord: "Password is required !" });
 
       bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
         if (!isMatch)
@@ -107,7 +107,11 @@ const login = (req, res, next) => {
           fullName: user.fullName,
           userType: user.userType // Để phân quyền user, sau này lấy từ jwt về xài
         };
-        jwt.sign(payload, "LouisPanda", { expiresIn: "1h" }, (err, token) => {
+
+        const KEY = "LouisPanda" + fingerPrint;
+        // console.log("TCL: login -> fingerPrint", fingerPrint)
+
+        jwt.sign(payload, KEY, { expiresIn: "3h" }, (err, token) => {
           if (err) return res.status(400).json(err);
 
           return res.status(200).json({
@@ -127,7 +131,7 @@ const login = (req, res, next) => {
 // desc    test-private
 // access  PRIVATE (Chỉ cho những user đã loginn vào hệ thống mới xài được)
 const testPrivate = (req, res, next) => {
-  res.status(200).json({ message: "Ban da vao he thong" }); // sử dụng res là kết thúc luôn middleware
+  res.status(200).json({ message: "Bạn đã vào hệ thống !" }); // sử dụng res là kết thúc luôn middleware
 };
 
 // module.exports = { router }; // xuat ra object

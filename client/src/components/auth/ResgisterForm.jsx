@@ -152,7 +152,7 @@ const ResgisterForm = props => {
     isSubmitting,
     ApiErr,
   } = props;
-  console.log(ApiErr)
+  // console.log(ApiErr)
   return (
     <div>
       <form onSubmit={handleSubmit}>

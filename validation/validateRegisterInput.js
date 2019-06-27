@@ -75,7 +75,7 @@ validateRegisterInput = async data => {
   } else {
     const user = await User.findOne({ phone: data.phone });
     // console.log("phone :", data.phone)
-    if (user) errors.phone = "Phone already existed";
+    if (user) errors.phone = "Phone is already exist";
   }
 
   return {
