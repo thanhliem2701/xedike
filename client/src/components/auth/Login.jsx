@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import _ from "lodash";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -100,7 +100,8 @@ class Login extends Component {
             Submit
           </Button>
         </Form>
-        <Button onClick={this.testPrivate}>TEST</Button>
+        {/* <Button onClick={this.testPrivate}>TEST</Button> */}
+
       </div>
     );
   }
