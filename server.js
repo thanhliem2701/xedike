@@ -1,6 +1,7 @@
 // 3rd packages
 const express = require("express");
 const mongoose = require("mongoose");
+// var cors = require('cors')
 
 //lodash thư viện cung cấp nhiều tính năng cho js
 // npm i lodash --save
@@ -13,6 +14,16 @@ mongoose
 
 // tạo server bằng express
 const app = express();
+// app.use(cors());
+
+// Trình bắt lỗi trong quá trình chạy server
+// process
+//   .on('unhandledRejection', (reason, p) => {  // Bắt lỗi những thứ như promise....
+//     console.error(reason, 'Unhandled Rejection at Promise', p);
+//   })
+//   .on('uncaughtException', err => {
+//     console.error(err, 'Uncaught Exception thrown');
+//   });
 
 //middleware
 //parser middleware

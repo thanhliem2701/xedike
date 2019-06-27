@@ -16,7 +16,7 @@ validateRegisterInput = async data => {
   data.dateOfBirth = _.get(data, "dateOfBirth", "");
   data.fullName = _.get(data, "fullName", "");
   data.phone = _.get(data, "phone", "");
-  
+
   //lodash.toPair() chuyen Object thanh array
   //lodash.fromPair Array => object
   // function programming : pipe line _.chain
@@ -31,7 +31,7 @@ validateRegisterInput = async data => {
     errors.email = "Email is invalid";
   } else {
     const user = await User.findOne({ email: data.email });
-    if (user) errors.email = "Email already existed";
+    if (user) errors.email = "Email already exist !";
   }
 
   //validate password
@@ -40,14 +40,29 @@ validateRegisterInput = async data => {
   } else if (!validator.isLength(data.passWord, { min: 6 })) {
     errors.passWord = "Password must be at least 6 characters !";
   }
+
   //validate password2
   if (validator.isEmpty(data.passWord2)) {
     errors.passWord2 = "Confirm Password is required !";
   } else if (!validator.equals(data.passWord, data.passWord2)) {
     errors.passWord2 = "Password does not match !";
   }
+
   // DOB
+  if (validator.isEmpty(data.dateOfBirth)) {
+    errors.dateOfBirth = "Please input your date of birth !"
+  }
+
+  //user type
+  // console.log(data.userType)
+  if (validator.isEmpty(data.userType) || data.userType == -1) {
+    errors.userType = "Please choose user type !"
+  }
+
   //FullName
+  if (validator.isEmpty(data.fullName)) {
+    errors.fullName = "Please input full name !";
+  }
 
   //validate phone
   if (validator.isEmpty(data.phone)) {
@@ -59,6 +74,7 @@ validateRegisterInput = async data => {
 
   } else {
     const user = await User.findOne({ phone: data.phone });
+    // console.log("phone :", data.phone)
     if (user) errors.phone = "Phone already existed";
   }
 

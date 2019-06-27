@@ -24,7 +24,9 @@ const uploadAvatar = (req, res, next) => {
 // desc    register new user
 // access  PUBLIC
 const register = async (req, res, next) => {
+
   const { isValid, errors } = await validateRegisterInput(req.body);
+  
   if (!isValid) return res.status(400).json(errors);
 
   const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
@@ -92,11 +94,12 @@ const login = (req, res, next) => {
 
   User.findOne({ email })
     .then(user => {
-      if (!user) return Promise.reject({ email: "Email does not exists" });
+      if (!user) return Promise.reject({ email: "Email does not exists !" });
+      if (passWord ==="") return Promise.reject({ passWord: "Password is required !" });
 
       bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
         if (!isMatch)
-          return res.status(400).json({ passWord: "Password invalid" });
+          return res.status(400).json({ passWord: "Password invalid !" });
 
         const payload = {
           id: user._id,
