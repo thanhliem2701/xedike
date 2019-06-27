@@ -8,13 +8,17 @@ const authenticating = (req, res, next) => {
   // thanhcong : return next()
   // .thatbai: res.json(err)
   const token = req.header("Authorization");
+  const fingerPrint = req.header("fingerPrint");
+  console.log("TCL: authenticating -> fingerPrint", fingerPrint)
+
+  const KEY = "LouisPanda" + fingerPrint;
   try {
-    const decoded = jwt.verify(token, "LouisPanda");
+    const decoded = jwt.verify(token, KEY);
     // console.log("TCL: authenticating -> decoded", decoded);
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ errors: "Ban ko the xem" });
+    res.status(403).json({ errors: "Không thể vào hệ thống, token hoặc fingerprint ko hợp lệ !" });
   }
 };
 
@@ -28,7 +32,7 @@ const authorizing = userTypeArray => {
     if (userTypeArray.indexOf(userType) > -1) {
       return next();
     } else {
-      res.status(403).json({ errors: "Ban ko co quyen vao day" });
+      res.status(403).json({ errors: "Bạn ko có quyền vào đây !" });
     }
   };
 };
