@@ -3,10 +3,11 @@ import _ from "lodash";
 import getFingerPrint from "../helpers/getFingerPrint";
 import jwtDecode from "jwt-decode";
 import setHeaders from "../helpers/setHeaders";
+import { SET_ERRORS } from "../contants";
 
-export const getErrors = err => {
+export const setErrors = err => {
   return {
-    type: "GET_ERRORS",
+    type: SET_ERRORS,
     payload: err
   };
 };
@@ -32,6 +33,7 @@ export const setCurrentUser = data => {
 };
 
 export const login = (data, history) => {
+  console.log(data)
   const { email, passWord } = data;
   return dispatch => {
     getFingerPrint(fingerPrint => {
@@ -46,15 +48,17 @@ export const login = (data, history) => {
           dispatch(setCurrentUser(decoded));
           // console.log(decoded);
           setHeaders();
-          dispatch(getErrors({}));
+          dispatch(setErrors({}));
+          console.log(fingerPrint)
           //   axios.defaults.headers.common["Authorization"] = token;
           //   axios.defaults.headers.common["fingerprint"] = fingerPrint;
           //Authorization
         })
         .catch(err => {
           if (err) {
-            dispatch(getErrors(_.get(err, "response.data", {})));
+            dispatch(setErrors(_.get(err, "response.data", {})));
           }
+          console.log(err)
           // console.log(err.response.data);
           //   this.setState({
           //     errors: _.get(err, "response.data", {}) // dấu {} phía sau nghĩa là trường hợp ko có dữ liệu thì object rỗng, né undefine
@@ -74,13 +78,13 @@ export const register = (data, history) => {
         // this.setState({
         //   errors: {}
         // });
-        dispatch(getErrors({}));
+        dispatch(setErrors({}));
         alert("Register successful !");
         history.push("/registersuccess");
       })
       .catch(err => {
         if (err) {
-          dispatch(getErrors(_.get(err, "response.data", {})));
+          dispatch(setErrors(_.get(err, "response.data", {})));
         }
 
         // this.setState({

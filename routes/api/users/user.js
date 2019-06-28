@@ -94,8 +94,8 @@ const login = (req, res, next) => {
   User.findOne({ email })
     .then(user => {
       if (!user) return Promise.reject({ email: "Email does not exists !" });
-      if (passWord === "")
-        return Promise.reject({ passWord: "Password is required !" });
+      // if (passWord === "") //React đã check
+      //   return Promise.reject({ passWord: "Password is required !" });
 
       bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
         if (!isMatch)
@@ -131,7 +131,7 @@ const login = (req, res, next) => {
 // desc    test-private
 // access  PRIVATE (Chỉ cho những user đã loginn vào hệ thống mới xài được)
 const testPrivate = (req, res, next) => {
-  res.status(200).json({ message: "Bạn đã vào hệ thống !" }); // sử dụng res là kết thúc luôn middleware
+  res.status(200).json({ message: "You are authenticated !" }); // sử dụng res là kết thúc luôn middleware
 };
 
 // module.exports = { router }; // xuat ra object
