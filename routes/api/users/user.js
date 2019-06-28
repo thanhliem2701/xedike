@@ -20,6 +20,11 @@ const uploadAvatar = (req, res, next) => {
     .catch(err => res.status(400).json(err));
 };
 
+// // Update user
+// const updateUser = (req,res,next) => {
+
+// }
+
 // route   POST  /api/users/register
 // desc    register new user
 // access  PUBLIC
@@ -28,14 +33,15 @@ const register = async (req, res, next) => {
 
   if (!isValid) return res.status(400).json(errors);
 
-  const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
+  const { email, passWord, fullName, userType, phone, dateOfBirth,hobbies } = req.body;
   const newUser = new User({
     email,
     passWord,
     fullName,
     userType,
     phone,
-    dateOfBirth
+    dateOfBirth,
+    hobbies
   });
   bcrypt.genSalt(10, (err, salt) => {
     if (err) return Promise.reject(err);
@@ -94,8 +100,8 @@ const login = (req, res, next) => {
   User.findOne({ email })
     .then(user => {
       if (!user) return Promise.reject({ email: "Email does not exists !" });
-      if (passWord === "")
-        return Promise.reject({ passWord: "Password is required !" });
+      // if (passWord === "") //React đã check
+      //   return Promise.reject({ passWord: "Password is required !" });
 
       bcrypt.compare(passWord, user.passWord, (err, isMatch) => {
         if (!isMatch)
@@ -131,7 +137,7 @@ const login = (req, res, next) => {
 // desc    test-private
 // access  PRIVATE (Chỉ cho những user đã loginn vào hệ thống mới xài được)
 const testPrivate = (req, res, next) => {
-  res.status(200).json({ message: "Bạn đã vào hệ thống !" }); // sử dụng res là kết thúc luôn middleware
+  res.status(200).json({ message: "You are authenticated !" }); // sử dụng res là kết thúc luôn middleware
 };
 
 // module.exports = { router }; // xuat ra object

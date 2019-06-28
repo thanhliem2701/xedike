@@ -18,7 +18,7 @@ const authenticating = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(403).json({ errors: "Không thể vào hệ thống, token hoặc fingerprint ko hợp lệ !" });
+    res.status(403).json({ errors: "Can't not access, your token or fingerprint is invalid !" });
   }
 };
 
@@ -32,7 +32,7 @@ const authorizing = userTypeArray => {
     if (userTypeArray.indexOf(userType) > -1) {
       return next();
     } else {
-      res.status(403).json({ errors: "Bạn ko có quyền vào đây !" });
+      res.status(403).json({ errors: "Your don't have permition to access !" });
     }
   };
 };
