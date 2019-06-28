@@ -30,18 +30,18 @@ const formikEnhancer = withFormik({
       .min(10, "C'mon, your phone is longer than that")
       .required("phone is required."),
     userType: Yup.string()
-    .required("User type is required.")
-    .test("passwords-match","please choose user type !",function(value) {
-      return value !== "-1";
-    }),
+      .required("User type is required.")
+      .test("passwords-match", "please choose user type !", function(value) {
+        return value !== "-1";
+      }),
     dateOfBirth: Yup.string().required("Your date of birth is required.")
   }),
 
   mapPropsToValues: ({ content }) => ({
     ...content
   }),
-  
-  handleSubmit: (values, { setSubmitting,props }) => {
+
+  handleSubmit: (values, { setSubmitting, props }) => {
     setSubmitting(false);
     props.onSubmit(values);
   }
@@ -130,8 +130,12 @@ const SelectInput = ({
         onChange={onChange}
         {...props}
       >
-        {options.map((op,key) => {
-          return <option key={key} value={op.key}>{op.value}</option>;
+        {options.map((op, key) => {
+          return (
+            <option key={key} value={op.key}>
+              {op.value}
+            </option>
+          );
         })}
       </select>
       <InputFeedback error={error} />
@@ -150,120 +154,47 @@ const ResgisterForm = props => {
     handleSubmit,
     // handleReset,
     isSubmitting,
-    ApiErr,
+    ApiErr
   } = props;
-  // console.log(ApiErr)
+
+  const inputArr = [
+    { id: "email",type:"text",label:"Email",placeholder:"Enter email..."},
+    { id: "passWord",type:"password",label:"Password",placeholder:"Enter password..."},
+    { id: "passWord2",type:"Password",label:"Confirm Password",placeholder:"Enter confirm password..."},
+    { id: "fullName",type:"text",label:"Full Name",placeholder:"Enter your Full Name..."},
+    { id: "phone",type:"text",label:"Phone number",placeholder:"Enter phone number..."},
+    { id: "dateOfBirth",type:"date",label:"Date Of Birth",placeholder:"Enter Date Of Birth..."}
+  ];
+
+  const inputItem = inputArr.map (ipa => {
+    return (
+      <TextInput
+          id = {ipa.id}
+          type= {ipa.type}
+          label= {ipa.label}
+          placeholder= {ipa.placeholder}
+          error={(touched[ipa.id] && errors[ipa.id]) || ApiErr[ipa.id]}
+          value={values[ipa.id]}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+    )
+  })
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        {/* <FormGroup> */}
-
-        <TextInput
+        {inputItem}
+        {/* <TextInput
           id="email"
           type="text"
           label="Email"
           placeholder="Enter email..."
-          error={(touched.email && errors.email) || ApiErr.email }
+          error={(touched.email && errors.email) || ApiErr.email}
           value={values.email}
           onChange={handleChange}
           onBlur={handleBlur}
-        />
-
-        {/* <Label for="email" className="d-flex justify-content-between">
-            Email
-            <span className="text-danger">{errors.content.email}</span>
-          </Label>
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter email..."
-            value={values.content.email}
-            onChange={handleChange}
-            // onBlur = {this.handleBlur}
-            invalid={touched.content.email && errors.content.email}
-          /> */}
-        {/* </FormGroup>
-
-        <FormGroup> */}
-        <TextInput
-          id="passWord"
-          type="passWord"
-          label="Password"
-          placeholder="Enter password..."
-          error={(touched.passWord && errors.passWord) || ApiErr.passWord }
-          value={values.passWord}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-        {/* <Label for="passWord" className="d-flex justify-content-between">
-            Password
-            <span className="text-danger">{this.state.errors.passWord}</span>
-          </Label>
-          <Input
-            type="passWord"
-            name="passWord"
-            id="passWord"
-            placeholder="Enter password..."
-            value={this.state.password}
-            onChange={this.onChange}
-            invalid={this.state.errors.passWord ? true : false}
-          /> */}
-        {/* </FormGroup>
-
-        <FormGroup> */}
-        <TextInput
-          id="passWord2"
-          type="passWord"
-          label="Confirm Password"
-          placeholder="Enter confirm password..."
-          error={(touched.passWord2 && errors.passWord2) || ApiErr.passWord2}
-          value={values.passWord2}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-
-        {/* <Label for="passWord2" className="d-flex justify-content-between">
-            Confirm Password
-            <span className="text-danger">{this.state.errors.passWord2}</span>
-          </Label>
-          <Input
-            type="passWord"
-            name="passWord2"
-            id="passWord2"
-            placeholder="Enter Confirm Password..."
-            value={this.state.password2}
-            onChange={this.onChange}
-            invalid={this.state.errors.passWord2 ? true : false}
-          /> */}
-        {/* </FormGroup>
-        <FormGroup> */}
-        <TextInput
-          id="fullName"
-          type="text"
-          label="Full Name"
-          placeholder="Enter your Full Name..."
-          error={(touched.fullName && errors.fullName) || ApiErr.fullName}
-          value={values.fullName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-
-        {/* <Label for="fullName" className="d-flex justify-content-between">
-            Full Name
-            <span className="text-danger">{this.state.errors.fullName}</span>
-          </Label>
-          <Input
-            type="text"
-            name="fullName"
-            id="fullName"
-            placeholder="Enter Full Name..."
-            value={this.state.fullName}
-            onChange={this.onChange}
-            invalid={this.state.errors.fullName ? true : false}
-          /> */}
-        {/* </FormGroup>
-        <FormGroup> */}
+        />*/}
         <SelectInput
           id="userType"
           type="select"
@@ -274,65 +205,7 @@ const ResgisterForm = props => {
           onChange={handleChange}
           onBlur={handleBlur}
           options={optionUserType}
-        >
-          {/* <option value="-1">Select user type...</option>
-            <option value="passenger">Passenger</option>
-            <option value="driver">Driver</option> */}
-        </SelectInput>
-
-        {/* </FormGroup>
-        <FormGroup> */}
-        <TextInput
-          id="phone"
-          type="text"
-          label="Phone number"
-          placeholder="Enter your phone number..."
-          error={(touched.phone && errors.phone ) || ApiErr.phone}
-          value={values.phone}
-          onChange={handleChange}
-          onBlur={handleBlur}
         />
-
-        {/* <Label for="phone" className="d-flex justify-content-between">
-            Phone
-            <span className="text-danger">{this.state.errors.phone}</span>
-          </Label>
-          <Input
-            type="text"
-            name="phone"
-            id="phone"
-            placeholder="Enter phone..."
-            value={this.state.phone}
-            onChange={this.onChange}
-            invalid={this.state.errors.phone ? true : false}
-          /> */}
-        {/* </FormGroup>
-        <FormGroup> */}
-        <TextInput
-          id="dateOfBirth"
-          type="date"
-          label="Date Of Birth"
-          placeholder="Enter your Date Of Birth..."
-          error={(touched.dateOfBirth && errors.dateOfBirth) || ApiErr.dateOfBirth}
-          value={values.dateOfBirth}
-          onChange={handleChange}
-          onBlur={handleBlur}
-        />
-
-        {/* <Label for="dateOfBirth" className="d-flex justify-content-between">
-            Date Of Birth
-            <span className="text-danger">{this.state.errors.dateOfBirth}</span>
-          </Label>
-          <Input
-            type="date"
-            name="dateOfBirth"
-            id="dateOfBirth"
-            placeholder="Enter DOB"
-            value={this.state.dateOfBirth}
-            onChange={this.onChange}
-            invalid={this.state.errors.dateOfBirth ? true : false}
-          /> */}
-        {/* </FormGroup> */}
         <Button name="submit" type="submit" disabled={isSubmitting}>
           Submit
         </Button>

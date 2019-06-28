@@ -96,7 +96,7 @@ const LoginForm = props => {
         />
         <TextInput
           id="passWord"
-          type="passWord"
+          type="password"
           label="Password"
           placeholder="Enter password..."
           error={(touched.passWord && errors.passWord) || ApiErr.passWord}
@@ -104,37 +104,7 @@ const LoginForm = props => {
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        {/* <FormGroup>
-          <Label for="email" className="d-flex justify-content-between">
-            Email
-            <span className="text-danger">{this.state.errors.email}</span>
-          </Label>
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter email..."
-            value={this.state.email}
-            onChange={this.onChange}
-            invalid={this.state.errors.email ? true : false}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label for="passWord" className="d-flex justify-content-between">
-            Password
-            <span className="text-danger">{this.state.errors.passWord}</span>
-          </Label>
-          <Input
-            type="passWord"
-            name="passWord"
-            id="passWord"
-            placeholder="Enter password..."
-            value={this.state.password}
-            onChange={this.onChange}
-            invalid={this.state.errors.passWord ? true : false}
-          />
-        </FormGroup> */}
+    
         <Button name="submit" type="submit" disabled={isSubmitting}>
           Submit
         </Button>
