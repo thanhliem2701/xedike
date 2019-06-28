@@ -20,6 +20,11 @@ const uploadAvatar = (req, res, next) => {
     .catch(err => res.status(400).json(err));
 };
 
+// // Update user
+// const updateUser = (req,res,next) => {
+
+// }
+
 // route   POST  /api/users/register
 // desc    register new user
 // access  PUBLIC
@@ -28,14 +33,15 @@ const register = async (req, res, next) => {
 
   if (!isValid) return res.status(400).json(errors);
 
-  const { email, passWord, fullName, userType, phone, dateOfBirth } = req.body;
+  const { email, passWord, fullName, userType, phone, dateOfBirth,hobbies } = req.body;
   const newUser = new User({
     email,
     passWord,
     fullName,
     userType,
     phone,
-    dateOfBirth
+    dateOfBirth,
+    hobbies
   });
   bcrypt.genSalt(10, (err, salt) => {
     if (err) return Promise.reject(err);

@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   avatar: { type: String },
   numberOfTrip: { type: Number },
   numberOfKms: { type: Number },
+  hobbies: [String],
   isActive: { type: Boolean, default: true }
 });
 

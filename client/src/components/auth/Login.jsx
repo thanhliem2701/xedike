@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+
 // import _ from "lodash";
 // import axios from "axios";
 // import jwtDecode from "jwt-decode";
 // import Fingerprint2 from "fingerprintjs2";
 import { connect } from "react-redux";
 import { login } from "../../action/auth";
+import LoginForm from "./LoginForm";
 // import { withRouter } from "react-router-dom";
 // withRouter là higher order component
 // Khi nó bọc 1 component lại thì component trả về sẽ có tất cả props
@@ -21,8 +22,7 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      email: "",
-      passWord: "",
+      content: { email: "", passWord: "" },
       errors: {}
     };
   }
@@ -31,9 +31,9 @@ class Login extends Component {
       [e.target.name]: e.target.value
     });
   };
-  onSubmit = e => {
-    e.preventDefault();
-    this.props.login(this.state);
+  onSubmit = values => {
+    // e.preventDefault();
+    this.props.login(values);
     // const { email, passWord } = this.state;
     //fingerprint2
     // Fingerprint2.getV18({}, function(fingerPrint) {   // loi lam mat this.
@@ -62,48 +62,24 @@ class Login extends Component {
     return (
       <div className="container text-left">
         <h1>Login</h1>
-        <Form onSubmit={this.onSubmit}>
-          <FormGroup>
-            <Label for="email" className="d-flex justify-content-between">
-              Email
-              <span className="text-danger">{this.state.errors.email}</span>
-            </Label>
-            <Input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Enter email..."
-              value={this.state.email}
-              onChange={this.onChange}
-              invalid={this.state.errors.email ? true : false}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label for="passWord" className="d-flex justify-content-between">
-              Password
-              <span className="text-danger">{this.state.errors.passWord}</span>
-            </Label>
-            <Input
-              type="passWord"
-              name="passWord"
-              id="passWord"
-              placeholder="Enter password..."
-              value={this.state.password}
-              onChange={this.onChange}
-              invalid={this.state.errors.passWord ? true : false}
-            />
-          </FormGroup>
-          <Button name="submit" type="submit">
-            Submit
-          </Button>
-        </Form>
-        <Button onClick={this.testPrivate}>TEST</Button>
+        <LoginForm
+          content={this.state.content}
+          onSubmit={this.onSubmit}
+          ApiErr={this.props.errors}
+        />
+        {/* <Button onClick={this.testPrivate}>TEST</Button> */}
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    errors: state.errors
+  };
+};
+
 export default connect(
-  null,
+  mapStateToProps,
   { login }
 )(Login);

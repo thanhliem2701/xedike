@@ -26,7 +26,6 @@ class Register extends Component {
 
   // componentWillReceiveProps(nextProps) {
   //   console.log(nextProps.errors)
-
   //   this.setState({
   //     errors: nextProps.errors
   //   })
@@ -34,7 +33,6 @@ class Register extends Component {
 
   onSubmit = values => {
     this.props.register(values,this.props.history);
-    
     // e.preventDefault();
     // axios
     //   // .post("http://localhost:5000/api/users/register", this.state)

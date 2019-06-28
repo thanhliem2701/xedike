@@ -162,7 +162,7 @@ const ResgisterForm = props => {
           id="email"
           type="text"
           label="Email"
-          // placeholder="Enter email..."
+          placeholder="Enter email..."
           error={(touched.email && errors.email) || ApiErr.email }
           value={values.email}
           onChange={handleChange}
