@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 // npm i bcryptjs --save   bcryptjs để tạo ra chuỗi tăng bảo mật
 
 mongoose
-  .connect("mongodb://localhost:27017/xedike", { userNewUrlParser: true })
+  .connect("mongodb+srv://thanhliem2701:Thanhliem27@cluster0-znlzq.mongodb.net/test?retryWrites=true&w=majority", { userNewUrlParser: true })
   .then(() => console.log("Connected to DB"))
   .catch(err => console.log("TCL: err", err));
 
