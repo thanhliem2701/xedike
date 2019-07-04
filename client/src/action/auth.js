@@ -3,7 +3,7 @@ import _ from "lodash";
 import getFingerPrint from "../helpers/getFingerPrint";
 import jwtDecode from "jwt-decode";
 import setHeaders from "../helpers/setHeaders";
-import { SET_ERRORS } from "../contants";
+import { SET_ERRORS, SET_CURRENT_USER } from "../contants";
 
 export const setErrors = err => {
   return {
@@ -25,15 +25,27 @@ export const setErrors = err => {
 //     });
 //   };
 // };
+
+export const logOut = () => {
+  return dispatch => {
+    // xoa localstorage
+    localStorage.removeItem("token");
+    // xoa current user
+    dispatch(setCurrentUser({}));
+    // xoa header
+    setHeaders();
+  };
+};
+
 export const setCurrentUser = data => {
   return {
-    type: "SET_CURRENT_USER",
+    type: SET_CURRENT_USER,
     payload: data
   };
 };
 
 export const login = (data, history) => {
-  console.log(data)
+  console.log(data);
   const { email, passWord } = data;
   return dispatch => {
     getFingerPrint(fingerPrint => {
@@ -47,9 +59,10 @@ export const login = (data, history) => {
           const decoded = jwtDecode(token);
           dispatch(setCurrentUser(decoded));
           // console.log(decoded);
-          setHeaders();
+          setHeaders(token,fingerPrint);
           dispatch(setErrors({}));
-          console.log(fingerPrint)
+          console.log(fingerPrint);
+          alert("Login success !")
           //   axios.defaults.headers.common["Authorization"] = token;
           //   axios.defaults.headers.common["fingerprint"] = fingerPrint;
           //Authorization
@@ -58,7 +71,7 @@ export const login = (data, history) => {
           if (err) {
             dispatch(setErrors(_.get(err, "response.data", {})));
           }
-          console.log(err)
+          console.log(err);
           // console.log(err.response.data);
           //   this.setState({
           //     errors: _.get(err, "response.data", {}) // dấu {} phía sau nghĩa là trường hợp ko có dữ liệu thì object rỗng, né undefine
@@ -67,6 +80,21 @@ export const login = (data, history) => {
     });
   };
 };
+
+export const getMyProfile =(id,callback) => {
+  return (dispatch) => {
+    axios.get(`/api/users/${id}`)
+    .then(res => {
+      dispatch(setCurrentUser(res.data))
+      callback(res.data);
+    })
+    .catch(err => {
+      if(err) {
+        dispatch(setErrors(_.get(err, "response.data", {})));
+      }
+    })
+  }
+}
 
 export const register = (data, history) => {
   return dispatch => {

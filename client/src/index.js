@@ -7,13 +7,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // import { connect } from "redux";
 import { Provider } from "react-redux";
 import store from "./store";
+import getFingerPrint from "./helpers/getFingerPrint";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
-);
+getFingerPrint(fp => {
+  localStorage.setItem("fingerprint", fp);
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById("root")
+  );
+});
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

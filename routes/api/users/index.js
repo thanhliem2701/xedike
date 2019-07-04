@@ -12,6 +12,7 @@ router.get(
   authorizing(["driver", "passenger"]),
   userController.testPrivate
 );
+router.get("/:id",authenticating,userController.getUserById)
 router.post(
   "/upload-avatar",
   authenticating,

@@ -43,7 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //static
 //uploads là đường dẫn trên browser upload là folder trong source
-app.use("/uploads", express.static("upload"));
+app.use("/upload", express.static("upload"));
 
 // handle middleware router
 // app.get()

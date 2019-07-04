@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { SET_CURRENT_USER } from "../contants";
 
 const initialState = {
   profile: {}, //decoded
@@ -7,7 +8,7 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_CURRENT_USER":
+    case SET_CURRENT_USER:
       return {
         ...state,
         profile: action.payload,
@@ -15,6 +16,7 @@ const authReducer = (state = initialState, action) => {
         // ko có token
         isAuthenticated: !_.isEmpty(action.payload)
       };
+    
     default:
       return state;
   }

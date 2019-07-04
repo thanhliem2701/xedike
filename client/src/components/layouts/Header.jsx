@@ -5,15 +5,18 @@ import {
   NavbarToggler,
   NavbarBrand,
   Nav,
-  NavItem,
-  NavLink,
+  NavItem
+  // NavLink
   // UncontrolledDropdown,
   // DropdownToggle,
   // DropdownMenu,
   // DropdownItem
 } from "reactstrap";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { logOut } from "../../action/auth";
 
-export default class Header extends Component {
+class Header extends Component {
   constructor(props) {
     super(props);
 
@@ -28,36 +31,57 @@ export default class Header extends Component {
     });
   }
   render() {
+    const { isAuthenticated } = this.props.auth;
+    const navbarForAnonymous = (
+      <Nav className="ml-auto" navbar>
+        <NavItem>
+          <Link className="nav-link" to="/login">
+            Login
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link className="nav-link" to="/register">
+            Register
+          </Link>
+        </NavItem>
+      </Nav>
+    );
+
+    const navbarForLogedInUser = (
+      <Nav className="ml-auto" navbar>
+        <NavItem>
+          <Link className="nav-link" to="/profile">
+            Profile
+          </Link>
+        </NavItem>
+        <NavItem>
+          <Link onClick={this.props.logOut} className="nav-link" to="/login">
+            LogOut
+          </Link>
+        </NavItem>
+      </Nav>
+    );
     return (
       <div>
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/">reactstrap</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
-                  GitHub
-                </NavLink>
-              </NavItem>
-              {/* <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>Option 1</DropdownItem>
-                  <DropdownItem>Option 2</DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>Reset</DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown> */}
-            </Nav>
+            {isAuthenticated ? navbarForLogedInUser : navbarForAnonymous}
           </Collapse>
         </Navbar>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    auth: state.auth
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { logOut }
+)(Header);

@@ -20,6 +20,13 @@ const uploadAvatar = (req, res, next) => {
     .catch(err => res.status(400).json(err));
 };
 
+const getUserById = (req, res, next) => {
+  const { id } = req.user;
+  User.findById(id)
+    .then(user => res.status(200).json(user))
+    .catch(err => res.status(400).json(err));
+};
+
 // // Update user
 // const updateUser = (req,res,next) => {
 
@@ -33,7 +40,15 @@ const register = async (req, res, next) => {
 
   if (!isValid) return res.status(400).json(errors);
 
-  const { email, passWord, fullName, userType, phone, dateOfBirth,hobbies } = req.body;
+  const {
+    email,
+    passWord,
+    fullName,
+    userType,
+    phone,
+    dateOfBirth,
+    hobbies
+  } = req.body;
   const newUser = new User({
     email,
     passWord,
@@ -110,13 +125,15 @@ const login = (req, res, next) => {
         const payload = {
           id: user._id,
           email: user.email,
+          phone: user.phone,
           fullName: user.fullName,
+          dateOfBirth: user.dateOfBirth,
           userType: user.userType // Để phân quyền user, sau này lấy từ jwt về xài
         };
 
         const KEY = "LouisPanda" + fingerPrint;
         // console.log("TCL: login -> fingerPrint", fingerPrint)
-
+        // "2 days", "10h", "7d" "120" is equal to "120ms
         jwt.sign(payload, KEY, { expiresIn: "3h" }, (err, token) => {
           if (err) return res.status(400).json(err);
 
@@ -142,4 +159,4 @@ const testPrivate = (req, res, next) => {
 
 // module.exports = { router }; // xuat ra object
 // module.exports = router;
-module.exports = { register, login, testPrivate, uploadAvatar };
+module.exports = { register, login, testPrivate, uploadAvatar,getUserById };
